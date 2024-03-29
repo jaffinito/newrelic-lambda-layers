@@ -2,7 +2,7 @@
 
 set -Eeuo pipefail
 
-BUILD_DIR=dotnet # inside the existing dotnet dir
+BUILD_DIR=lib # for .net can either be lib  or bin. See: https://docs.aws.amazon.com/lambda/latest/dg/packaging-layers.html
 DIST_DIR=dist
 
 DOTNET_DIST_ARM64=$DIST_DIR/dotnet.arm64.zip
@@ -35,16 +35,17 @@ function get_agent {
     url="https://download.newrelic.com/dot_net_agent/latest_release/newrelic-dotnet-agent_${AGENT_VERSION}_${arch}.tar.gz"
     rm -rf $AGENT_DIST_ZIP
     curl -L $url -o $AGENT_DIST_ZIP
-    unzip $AGENT_DIST_ZIP -d ./$BUILD_DIR
+    mkdir -p $BUILD_DIR
+    tar -xvf $AGENT_DIST_ZIP -C ./$BUILD_DIR # under $BUILD_DIR/newrelic-dotnet-agent
     rm -f $AGENT_DIST_ZIP
 }
 
-if [ -z "${AGENT_VERSION}" ]; then
+if [ -z $AGENT_VERSION ]; then
     echo "Missing required AGENT_VERSION environment variable: ${AGENT_VERSION}."
     exit 1
 fi
 
-case "$1" in
+case "${1:-default}" in
     "dotnet")
         #build-dotnet-arm64
         #publish-dotnet-arm64
