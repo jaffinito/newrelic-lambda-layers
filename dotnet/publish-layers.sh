@@ -28,6 +28,18 @@ function build-dotnet-x86-64 {
     echo "Build complete: ${DOTNET_DIST_X86_64}"
 }
 
+function build-dotnet-arm64 {
+    echo "Building New Relic layer for .NET 6, 7 and 8 (ARM64)"
+    rm -rf $BUILD_DIR $DOTNET_DIST_ARM64
+    mkdir -p $DIST_DIR
+    get_agent arm64
+    # MAKE CONFIG CHANGES HERE
+    download_extension arm64
+    zip -rq $DOTNET_DIST_ARM64 $BUILD_DIR $EXTENSION_DIST_DIR $EXTENSION_DIST_PREVIEW_FILE
+    rm -rf $BUILD_DIR $EXTENSION_DIST_DIR $EXTENSION_DIST_PREVIEW_FILE
+    echo "Build complete: ${DOTNET_DIST_ARM64}"
+}
+
 # exmaple https://download.newrelic.com/dot_net_agent/latest_release/newrelic-dotnet-agent_10.22.0_amd64.tar.gz
 function get_agent {
     arch=$1
@@ -47,7 +59,7 @@ fi
 
 case "${1:-default}" in
     "dotnet")
-        #build-dotnet-arm64
+        build-dotnet-arm64
         #publish-dotnet-arm64
         build-dotnet-x86-64
         #publish-dotnet-x86-64
