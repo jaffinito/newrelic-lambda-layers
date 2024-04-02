@@ -128,6 +128,9 @@ function layer_name_str() {
     "nodejs20.x")
       rt_part="NodeJS20X"
       ;;
+    "dotnet")
+      rt_part="Dotnet"
+      ;;
     esac
 
     case $2 in
@@ -179,6 +182,9 @@ function s3_prefix() {
     "nodejs20.x")
       name="nr-nodejs20.x"
       ;;
+    "dotnet")
+      name="nr-dotnet"
+      ;;
     esac
 
     echo $name
@@ -208,6 +214,10 @@ function publish_layer {
     compat_list=( $runtime_name )
     if [[ $runtime_name == "provided" ]]
     then compat_list=("provided" "provided.al2" "dotnetcore3.1" "dotnet6")
+    fi
+
+     if [[ $runtime_name == "dotnet" ]]
+    then compat_list=("dotnet6" "dotnet7" "dotnet8")
     fi
 
     echo "Uploading ${layer_archive} to s3://${bucket_name}/${s3_key}"

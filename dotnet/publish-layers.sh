@@ -28,6 +28,17 @@ function build-dotnet-x86-64 {
     echo "Build complete: ${DOTNET_DIST_X86_64}"
 }
 
+function publish-dotnet-x86-64 {
+    if [ ! -f $DOTNET_DIST_X86_64 ]; then
+        echo "Package not found: ${DOTNET_DIST_X86_64}"
+        exit 1
+    fi
+
+    for region in "${REGIONS_X86[@]}"; do
+      publish_layer $DOTNET_DIST_X86_64 $region dotnet x86_64
+    done
+}
+
 function build-dotnet-arm64 {
     echo "Building New Relic layer for .NET 6, 7 and 8 (ARM64)"
     rm -rf $BUILD_DIR $DOTNET_DIST_ARM64
@@ -38,6 +49,17 @@ function build-dotnet-arm64 {
     zip -rq $DOTNET_DIST_ARM64 $BUILD_DIR $EXTENSION_DIST_DIR $EXTENSION_DIST_PREVIEW_FILE
     rm -rf $BUILD_DIR $EXTENSION_DIST_DIR $EXTENSION_DIST_PREVIEW_FILE
     echo "Build complete: ${DOTNET_DIST_ARM64}"
+}
+
+function publish-dotnet-arm64 {
+    if [ ! -f $DOTNET_DIST_ARM64 ]; then
+        echo "Package not found: ${DOTNET_DIST_ARM64}"
+        exit 1
+    fi
+
+    for region in "${REGIONS_ARM[@]}"; do
+      publish_layer $DOTNET_DIST_ARM64 $region dotnet arm64
+    done
 }
 
 # exmaple https://download.newrelic.com/dot_net_agent/latest_release/newrelic-dotnet-agent_10.22.0_amd64.tar.gz
