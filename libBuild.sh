@@ -216,7 +216,7 @@ function publish_layer {
     then compat_list=("provided" "provided.al2" "dotnetcore3.1" "dotnet6")
     fi
 
-     if [[ $runtime_name == "dotnet" ]]
+    if [[ $runtime_name == "dotnet" ]]
     then compat_list=("dotnet6" "dotnet7" "dotnet8")
     fi
 
